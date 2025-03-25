@@ -9,15 +9,15 @@ body {
 .terminal {
     padding: 1ch;
 
-    width: 100ch;
-    height: 60ch;
-
-    font-family: monospace;
     background-color: gray;
+    font-family: monospace;
 }
 
 #ascii {
-    height: 100%;
+    margin: 0;
+
+    width: 100ch;
+
     background-color: black;
     color: white;
 }
