@@ -1,0 +1,23 @@
+body {
+    margin: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.terminal {
+    padding: 1ch;
+
+    width: 100ch;
+    height: 60ch;
+
+    font-family: monospace;
+    background-color: gray;
+}
+
+#ascii {
+    height: 100%;
+    background-color: black;
+    color: white;
+}
