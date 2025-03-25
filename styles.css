@@ -16,7 +16,7 @@ body {
 #ascii {
     margin: 0;
 
-    width: 100ch;
+    font-size: 0.25em;
 
     background-color: black;
     color: white;

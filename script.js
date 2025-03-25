@@ -1,7 +1,7 @@
 const ascii = document.querySelector("#ascii");
 
-const width = 100;
-const height = 35;
+const width = 320;
+const height = 90;
 
 let buffer = [];
 
@@ -61,10 +61,11 @@ function createPoint3d(x, y, z) {
  * @returns {Point2D}
  */
 function projectPoint(p, distance) {
-  return createPoint2d(
-    Math.round((p.x * distance) / (p.z + distance)),
-    Math.round((p.y * distance) / (p.z + distance)),
-  );
+  const scale = distance / (p.z + distance);
+  const x2d = width / 2 + p.x * scale;
+  const y2d = height / 2 + p.y * scale;
+
+  return createPoint2d(Math.round(x2d), Math.round(y2d));
 }
 
 /**
@@ -100,6 +101,20 @@ function drawLine(p1, p2, char = "#") {
 }
 
 /**
+ * @param {Point3D} p
+ * @param {number} angle
+ * @returns {Point3D}
+ */
+function rotateY(p, angle) {
+  const rad = (angle * Math.PI) / 180;
+  const cos = Math.cos(rad);
+  const sin = Math.sin(rad);
+  const x = p.x * cos - p.z * sin;
+  const z = p.x * sin + p.z * cos;
+  return createPoint3d(x, p.y, z);
+}
+
+/**
  * @param {Point2D} p1
  * @param {Point2D} p3
  */
@@ -116,8 +131,9 @@ function drawRectangle(p1, p3) {
 /**
  * @param {Point3D} p1
  * @param {Point3D} p7
+ * @param {number} angle
  */
-function drawCuboid(p1, p7) {
+function drawCuboid(p1, p7, angle) {
   const x1 = p1.x,
     y1 = p1.y,
     z1 = p1.z,
@@ -132,16 +148,13 @@ function drawCuboid(p1, p7) {
   const p6 = createPoint3d(x2, y1, z2);
   const p8 = createPoint3d(x1, y2, z2);
 
-  const distance = 100;
+  const corners = [p1, p2, p3, p4, p5, p6, p7, p8].map((pt) =>
+    rotateY(pt, angle),
+  );
 
-  const pp1 = projectPoint(p1, distance);
-  const pp2 = projectPoint(p2, distance);
-  const pp3 = projectPoint(p3, distance);
-  const pp4 = projectPoint(p4, distance);
-  const pp5 = projectPoint(p5, distance);
-  const pp6 = projectPoint(p6, distance);
-  const pp7 = projectPoint(p7, distance);
-  const pp8 = projectPoint(p8, distance);
+  const distance = 100;
+  const pp = corners.map((p) => projectPoint(p, distance));
+  const [pp1, pp2, pp3, pp4, pp5, pp6, pp7, pp8] = pp;
 
   drawLine(pp1, pp2);
   drawLine(pp2, pp3);
@@ -157,8 +170,16 @@ function drawCuboid(p1, p7) {
   drawLine(pp4, pp8);
 }
 
-initBuffer();
+let angle = 0;
+function animate() {
+  initBuffer();
 
-drawCuboid(createPoint3d(40, 10, 1), createPoint3d(60, 25, 21));
+  drawCuboid(createPoint3d(-25, -17, -25), createPoint3d(25, 17, 25), angle);
 
-renderBuffer();
+  renderBuffer();
+
+  angle += 1;
+  requestAnimationFrame(animate);
+}
+
+animate();
