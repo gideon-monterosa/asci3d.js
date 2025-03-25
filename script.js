@@ -33,9 +33,38 @@ function renderBuffer() {
 /**
  * @param {number} x
  * @param {number} y
+ * @returns {Point2D}
  */
 function createPoint2d(x, y) {
   return { x, y };
+}
+
+/**
+ * @typedef {Object} Point3D
+ * @property {number} x
+ * @property {number} y
+ * @property {number} z
+ */
+
+/**
+ * @param {number} x
+ * @param {number} y
+ * @returns {Point3D}
+ */
+function createPoint3d(x, y, z) {
+  return { x, y, z };
+}
+
+/**
+ * @param {Point3D} p
+ * @param {number} distance
+ * @returns {Point2D}
+ */
+function projectPoint(p, distance) {
+  return createPoint2d(
+    Math.round((p.x * distance) / (p.z + distance)),
+    Math.round((p.y * distance) / (p.z + distance)),
+  );
 }
 
 /**
@@ -84,8 +113,52 @@ function drawRectangle(p1, p3) {
   drawLine(p4, p1);
 }
 
+/**
+ * @param {Point3D} p1
+ * @param {Point3D} p7
+ */
+function drawCuboid(p1, p7) {
+  const x1 = p1.x,
+    y1 = p1.y,
+    z1 = p1.z,
+    x2 = p7.x,
+    y2 = p7.y,
+    z2 = p7.z;
+
+  const p2 = createPoint3d(x2, y1, z1);
+  const p3 = createPoint3d(x2, y2, z1);
+  const p4 = createPoint3d(x1, y2, z1);
+  const p5 = createPoint3d(x1, y1, z2);
+  const p6 = createPoint3d(x2, y1, z2);
+  const p8 = createPoint3d(x1, y2, z2);
+
+  const distance = 100;
+
+  const pp1 = projectPoint(p1, distance);
+  const pp2 = projectPoint(p2, distance);
+  const pp3 = projectPoint(p3, distance);
+  const pp4 = projectPoint(p4, distance);
+  const pp5 = projectPoint(p5, distance);
+  const pp6 = projectPoint(p6, distance);
+  const pp7 = projectPoint(p7, distance);
+  const pp8 = projectPoint(p8, distance);
+
+  drawLine(pp1, pp2);
+  drawLine(pp2, pp3);
+  drawLine(pp3, pp4);
+  drawLine(pp4, pp1);
+  drawLine(pp5, pp6);
+  drawLine(pp6, pp7);
+  drawLine(pp7, pp8);
+  drawLine(pp8, pp5);
+  drawLine(pp1, pp5);
+  drawLine(pp2, pp6);
+  drawLine(pp3, pp7);
+  drawLine(pp4, pp8);
+}
+
 initBuffer();
 
-drawRectangle(createPoint2d(3, 3), createPoint2d(9, 9));
+drawCuboid(createPoint3d(40, 10, 1), createPoint3d(60, 25, 21));
 
 renderBuffer();
