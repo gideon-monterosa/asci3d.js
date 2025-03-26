@@ -63,7 +63,7 @@ function createPoint3d(x, y, z) {
 function projectPoint(p, distance) {
   const scale = distance / (p.z + distance);
   const x2d = width / 2 + p.x * scale;
-  const y2d = height / 2 + p.y * scale;
+  const y2d = height / 2 + p.y * scale * 0.5;
 
   return createPoint2d(Math.round(x2d), Math.round(y2d));
 }
@@ -174,7 +174,7 @@ let angle = 0;
 function animate() {
   initBuffer();
 
-  drawCuboid(createPoint3d(-25, -17, -25), createPoint3d(25, 17, 25), angle);
+  drawCuboid(createPoint3d(-35, -35, -35), createPoint3d(35, 35, 35), angle);
 
   renderBuffer();
 
