@@ -115,20 +115,6 @@ function rotateY(p, angle) {
 }
 
 /**
- * @param {Point2D} p1
- * @param {Point2D} p3
- */
-function drawRectangle(p1, p3) {
-  const p2 = createPoint2d(p1.x, p3.y);
-  const p4 = createPoint2d(p3.x, p1.y);
-
-  drawLine(p1, p2);
-  drawLine(p2, p3);
-  drawLine(p3, p4);
-  drawLine(p4, p1);
-}
-
-/**
  * @param {Point3D} p1
  * @param {Point3D} p7
  * @param {number} angle
@@ -170,11 +156,46 @@ function drawCuboid(p1, p7, angle) {
   drawLine(pp4, pp8);
 }
 
+/**
+ * @param {Point3D} p1
+ * @param {Point3D} p3
+ * @param {Point3D} top
+ * @param {number} angle
+ */
+function drawPyramid(p1, p3, top, angle) {
+  const p2 = createPoint3d(p3.x, p1.y, p1.z);
+  const p4 = createPoint3d(p1.x, p1.y, p3.z);
+
+  const corners = [p1, p2, p3, p4, top].map((pt) => rotateY(pt, angle));
+
+  const distance = 100;
+  const projectedPoints = corners.map((p) => projectPoint(p, distance));
+
+  const [pp1, pp2, pp3, pp4, ppTop] = projectedPoints;
+
+  drawLine(pp1, pp2);
+  drawLine(pp2, pp3);
+  drawLine(pp3, pp4);
+  drawLine(pp4, pp1);
+
+  drawLine(pp1, ppTop);
+  drawLine(pp2, ppTop);
+  drawLine(pp3, ppTop);
+  drawLine(pp4, ppTop);
+}
+
 let angle = 0;
 function animate() {
   initBuffer();
 
   drawCuboid(createPoint3d(-35, -35, -35), createPoint3d(35, 35, 35), angle);
+
+  drawPyramid(
+    createPoint3d(-25, 40, -25),
+    createPoint3d(25, 40, 25),
+    createPoint3d(0, -40, 0),
+    angle,
+  );
 
   renderBuffer();
 
