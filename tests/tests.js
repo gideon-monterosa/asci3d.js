@@ -1,3 +1,9 @@
+function assertEquals(expected, actuel) {
+  if (expected !== actuel) {
+    throw new Error(`Expected ${expected}, got ${actuel}`);
+  }
+}
+
 function generateTestReport() {
   const element = document.querySelector("#report");
   if (!element) return;
@@ -7,23 +13,21 @@ function generateTestReport() {
       name: "Addition test",
       run: () => {
         const result = 1 + 1;
-        if (result !== 2) throw new Error(`Expected 2, got ${result}`);
+        assertEquals(2, result);
       },
     },
     {
       name: "Array length test",
       run: () => {
         const arr = [1, 2, 3];
-        if (arr.length !== 3)
-          throw new Error(`Expected length 3, got ${arr.length}`);
+        assertEquals(3, arr.length);
       },
     },
     {
       name: "Failing test example",
       run: () => {
         const value = "hello";
-        if (value !== "world")
-          throw new Error(`Expected 'world', got '${value}'`);
+        assertEquals("world", value);
       },
     },
   ];
