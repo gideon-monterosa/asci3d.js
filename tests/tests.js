@@ -43,13 +43,12 @@ function generateTestReport() {
     {
       name: "projectPoint test - point at origin",
       run: () => {
-        const point3d = window.createPoint3d(0, 0, 0);
+        const point3d = createPoint3d(0, 0, 0);
         const distance = 200;
-        const result = window.projectPoint(point3d, distance);
+        const result = projectPoint(point3d, distance);
 
-        // Should project to the center of the screen
-        assertEquals(Math.floor(window.width / 2), result.x);
-        assertEquals(Math.floor(window.height / 2), result.y);
+        assertEquals(Math.floor(width / 2), result.x);
+        assertEquals(Math.floor(height / 2), result.y);
       },
     },
 
@@ -57,10 +56,9 @@ function generateTestReport() {
     {
       name: "rotateY test - 90 degrees",
       run: () => {
-        const point = window.createPoint3d(100, 0, 0);
-        const rotated = window.rotateY(point, 90);
+        const point = createPoint3d(100, 0, 0);
+        const rotated = rotateY(point, 90);
 
-        // After 90 degree Y rotation, x should be ~0 and z should be ~100
         assertApproxEquals(0, rotated.x, 0.1);
         assertEquals(0, rotated.y); // Y shouldn't change
         assertApproxEquals(100, rotated.z, 0.1);
@@ -69,10 +67,9 @@ function generateTestReport() {
     {
       name: "rotateY test - 180 degrees",
       run: () => {
-        const point = window.createPoint3d(100, 20, 50);
-        const rotated = window.rotateY(point, 180);
+        const point = createPoint3d(100, 20, 50);
+        const rotated = rotateY(point, 180);
 
-        // After 180 degree Y rotation, x and z should be negated
         assertApproxEquals(-100, rotated.x, 0.1);
         assertEquals(20, rotated.y); // Y shouldn't change
         assertApproxEquals(-50, rotated.z, 0.1);
@@ -83,11 +80,10 @@ function generateTestReport() {
     {
       name: "rotateAroundCenter test",
       run: () => {
-        const point = window.createPoint3d(10, 0, 0);
-        const center = window.createPoint3d(0, 0, 0);
-        const rotated = window.rotateAroundCenter(point, center, 180);
+        const point = createPoint3d(10, 0, 0);
+        const center = createPoint3d(0, 0, 0);
+        const rotated = rotateAroundCenter(point, center, 180);
 
-        // After 180 degree rotation around origin, x should be negated
         assertApproxEquals(-10, rotated.x, 0.1);
         assertEquals(0, rotated.y);
         assertApproxEquals(0, rotated.z, 0.1);
@@ -96,12 +92,10 @@ function generateTestReport() {
     {
       name: "rotateAroundCenter test - non-origin center",
       run: () => {
-        const point = window.createPoint3d(20, 10, 0);
-        const center = window.createPoint3d(10, 10, 0);
-        const rotated = window.rotateAroundCenter(point, center, 180);
+        const point = createPoint3d(20, 10, 0);
+        const center = createPoint3d(10, 10, 0);
+        const rotated = rotateAroundCenter(point, center, 180);
 
-        // Point is 10 units to the right of center
-        // After 180 degrees, it should be 10 units to the left
         assertApproxEquals(0, rotated.x, 0.1);
         assertEquals(10, rotated.y);
         assertApproxEquals(0, rotated.z, 0.1);
@@ -112,10 +106,10 @@ function generateTestReport() {
     {
       name: "initBuffer test",
       run: () => {
-        window.initBuffer();
-        assertEquals(window.height, window.buffer.length);
-        assertEquals(window.width, window.buffer[0].length);
-        assertEquals(" ", window.buffer[0][0]);
+        initBuffer();
+        assertEquals(height, buffer.length);
+        assertEquals(width, buffer[0].length);
+        assertEquals(" ", buffer[0][0]);
       },
     },
 
@@ -123,15 +117,39 @@ function generateTestReport() {
     {
       name: "drawLine test - horizontal",
       run: () => {
-        window.initBuffer();
-        const p1 = window.createPoint2d(5, 5);
-        const p2 = window.createPoint2d(10, 5);
-        window.drawLine(p1, p2, "#");
+        initBuffer();
+        const p1 = createPoint2d(5, 5);
+        const p2 = createPoint2d(10, 5);
+        drawLine(p1, p2, "#");
 
-        // Check that pixels along the line are set
         for (let x = 5; x <= 10; x++) {
-          assertEquals("#", window.buffer[5][x]);
+          assertEquals("#", buffer[5][x]);
         }
+      },
+    },
+
+    // Add test for cuboid drawing
+    {
+      name: "drawCuboid test - existence",
+      run: () => {
+        initBuffer();
+        const p1 = createPoint3d(-10, -10, -10);
+        const p7 = createPoint3d(10, 10, 10);
+
+        drawCuboid(p1, p7, 0);
+      },
+    },
+
+    // Add test for pyramid drawing
+    {
+      name: "drawPyramid test - existence",
+      run: () => {
+        initBuffer();
+        const p1 = createPoint3d(30, -35, -35);
+        const p3 = createPoint3d(100, -35, 35);
+        const top = createPoint3d(65, 35, 0);
+
+        drawPyramid(p1, p3, top, 0);
       },
     },
   ];
