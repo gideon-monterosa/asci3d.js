@@ -4,30 +4,32 @@ function assertEquals(expected, actuel) {
   }
 }
 
+function assertObjectEquals(expected, actual) {
+  const expectedStr = JSON.stringify(expected);
+  const actualStr = JSON.stringify(actual);
+  if (expectedStr !== actualStr) {
+    throw new Error(`Expected ${expectedStr}, got ${actualStr}`);
+  }
+}
+
 function generateTestReport() {
   const element = document.querySelector("#report");
   if (!element) return;
 
   const tests = [
+    // Point creation tests
     {
-      name: "Addition test",
+      name: "createPoint2d test",
       run: () => {
-        const result = 1 + 1;
-        assertEquals(2, result);
+        const point = createPoint2d(10, 20);
+        assertObjectEquals({ x: 10, y: 20 }, point);
       },
     },
     {
-      name: "Array length test",
+      name: "createPoint3d test",
       run: () => {
-        const arr = [1, 2, 3];
-        assertEquals(3, arr.length);
-      },
-    },
-    {
-      name: "Failing test example",
-      run: () => {
-        const value = "hello";
-        assertEquals("world", value);
+        const point = createPoint3d(10, 20, 30);
+        assertObjectEquals({ x: 10, y: 20, z: 30 }, point);
       },
     },
   ];
